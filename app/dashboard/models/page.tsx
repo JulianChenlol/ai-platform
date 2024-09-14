@@ -1,9 +1,8 @@
 import { Model } from "@/app/lib/definitions";
 import { Card } from "@/app/ui/models/cards";
-import clsx from "clsx";
 
 export default async function Page() {
-  const res = await fetch("http://localhost:8001/api/v1/llm_models", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/llm_models`, {
     headers: {
       "Content-Type": "application/json",
     },

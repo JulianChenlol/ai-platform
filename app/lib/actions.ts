@@ -17,7 +17,7 @@ export async function createApiKey(formData: FormData) {
         active: formData.get("active"),
     });
     
-    const res = await fetch("http://localhost:8001/api/v1/api_keys", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api_keys`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export async function updateApiKey(id: string, formData: FormData) {
     const {active} = UpdateApiKey.parse({
         active: formData.get("active") === "active",
     });
-    const res = await fetch(`http://localhost:8001/api/v1/api_keys/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api_keys/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

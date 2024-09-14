@@ -1,5 +1,5 @@
 export async function fetchApiKeyById(id: string) {
-  const res = await fetch(`http://localhost:8001/api/v1/api_keys/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api_keys/${id}`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -10,7 +10,7 @@ export async function fetchApiKeyById(id: string) {
 
 export async function fetchModels() {
   const res = await fetch(
-    "http://localhost:8001/api/v1/llm_models",
+    `${process.env.NEXT_PUBLIC_API_URL}/llm_models`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -20,4 +20,3 @@ export async function fetchModels() {
   const data = await res.json();
   return data.items;
 }
-

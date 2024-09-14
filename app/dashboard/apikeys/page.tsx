@@ -4,11 +4,14 @@ import { CreateApiKey } from "@/app/ui/apikeys/buttons";
 import { DeleteApiKey, UpdateApiKey } from "@/app/ui/apikeys/buttons";
 
 export default async function Page() {
-  const res = await fetch("http://localhost:8001/api/v1/api_keys/users/1", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/1/apikeys`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const data = await res.json();
   const apikeys: ApiKey[] = data;
   return (
