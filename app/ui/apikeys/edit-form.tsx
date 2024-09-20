@@ -18,7 +18,6 @@ export default function EditApiKeyForm({
   apikey: ApiKeyForm;
   models: ModelField[];
 }) {
-  console.log(apikey);
   const updateApiKeyWithId = updateApiKey.bind(null, apikey.id);
   return (
     <form action={updateApiKeyWithId}>

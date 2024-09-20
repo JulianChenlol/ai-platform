@@ -3,6 +3,8 @@ import { remark } from "remark";
 import html from "remark-html";
 import { useEffect, useState } from "react";
 
+import { fetchPostPolls } from "@/app/poll/api/route";
+
 export async function getPostData(id) {
   const text = `作为一个ISTJ（内向、感觉、思考、判断型）的人，你通常注重实际和逻辑，讲求规则和秩序。因此，你的评论“爱护公共财物人人有责，不能因为是免费提供的就随意浪费”可以从以下几点合理性来解释：
 1. **遵守规则和规范：**
@@ -23,82 +25,68 @@ export async function getPostData(id) {
   // Combine the data with the id and contentHtml
   return contentHtml;
 }
-export function FloatingForm({ isOpen }: { isOpen: boolean }) {
+export function FloatingForm({ postId }: { postId: number }) {
   const [contentHtml, setContentHtml] = useState("");
+  const [polls, setPolls] = useState([]);
   useEffect(() => {
-    const fetchData = async () => {
-      const html = await getPostData(1);
-      setContentHtml(html);
-    };
-
+    async function fetchData() {
+      const data = await fetchPostPolls(postId);
+      setPolls(data);
+    }
     fetchData();
   }, []);
   const question = "Question";
-  const data = [
-    {
-      id: 1,
-      title: "Yes",
-      checked: false,
-    },
-    {
-      id: 2,
-      title: "No",
-      checked: false,
-    },
-  ];
 
   return (
     <div className="absolute right-1/4 bottom-1/8 w-1/2 h-3/4 z-10">
-      {isOpen && (
-        <div className="mt-4 p-6 bg-white rounded-lg shadow-lg w-full h-full">
-          <div className="flex h-full flex-col md:flex-row md:overflow-hidden">
-            <div className="w-full flex flex-col justify-between bg-gray-500 md:overflow-hidden">
-              <h2 className="whitespace-pre-line text-sm md:overflow-y-auto w-[calc(100%+14px)]">
-                {contentHtml}
-              </h2>
-              <Image
-                className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert "
-                src="/test.png"
-                alt="Next.js Logo"
-                width={360}
-                height={480}
-                priority
-              />
-            </div>
-            <div>
-              <div className="p-4 h-1/2 bg-stone-500">
-                <div>
-                  <h2 className="text-2xl font-bold mb-4">{question}</h2>
-                  <form>
-                    <div className="flex-col">
-                      {data.map((item) => (
-                        <div key={item.id}>
-                          <button
-                            type="button"
-                            id="option1"
-                            name="vote"
-                            value="option1"
-                            className="mr-2 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold md:w-72 rounded text-left px-2"
-                          >
-                            {item.title}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div className="p-4 h-1/2 bg-gray-500">
-                <div className="md:overflow-hidden ">
-                  <div className="whitespace-pre-line text-sm mb-4 overflow-y-auto max-h-72 w-[calc(100%+14px)]">
-                    <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      <div className="mt-4 p-6 bg-white rounded-lg shadow-lg w-full h-full">
+        <div className="flex h-full flex-col md:flex-row md:overflow-hidden">
+          <div className="w-full flex flex-col justify-between bg-gray-500 md:overflow-hidden">
+            <h2 className="whitespace-pre-line text-sm md:overflow-y-auto w-[calc(100%+14px)]">
+              {contentHtml}
+            </h2>
+            <Image
+              className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert "
+              src="/test.png"
+              alt="Next.js Logo"
+              width={360}
+              height={480}
+              priority
+            />
+          </div>
+          <div>
+            <div className="p-4 h-1/2 bg-stone-500">
+              <div>
+                <h2 className="text-2xl font-bold mb-4">{question}</h2>
+                <form>
+                  <div className="flex-col">
+                    {polls.map((item) => (
+                      <div key={item.id}>
+                        <button
+                          type="button"
+                          id="option1"
+                          name="vote"
+                          value="option1"
+                          className="mr-2 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold md:w-72 rounded text-left px-2"
+                        >
+                          {item.option}
+                        </button>
+                      </div>
+                    ))}
                   </div>
+                </form>
+              </div>
+            </div>
+            <div className="p-4 h-1/2 bg-gray-500">
+              <div className="md:overflow-hidden ">
+                <div className="whitespace-pre-line text-sm mb-4 overflow-y-auto max-h-72 w-[calc(100%+14px)]">
+                  <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -32,9 +32,30 @@ export async function GET_ALL(request: Request) {
   return Response.json(data);
 }
 
-export async function fetchPostsPages() {
-    
+const ITEMS_PER_PAGE = 4;
+export async function fetchPosts(query: string, currentPage: number) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/posts?page=${currentPage}&itemsPerPage=${ITEMS_PER_PAGE}`
+  );
+  const data = await res.json();
+  const posts = data.items.map((post) => ({
+    ...post,
+    url: "https://www.baidu.com",
+    user_url: "https://www.bing.com",
+    user_name: "baidu",
+  }));
+  return { posts, totalPages: Math.ceil(data.total / ITEMS_PER_PAGE) };
 }
+
+
+export async function fetchPostPolls(postId: number) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}/polls`
+  );
+  const data = await res.json();
+  return data;
+}
+
 // import { openai } from '@ai-sdk/openai'
 // import { StreamingTextResponse, streamText } from 'ai'
 
